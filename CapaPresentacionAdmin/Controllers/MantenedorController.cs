@@ -32,7 +32,10 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();
         }
-
+        public ActionResult Deposito()
+        {
+            return View();
+        }
 
         // ++++++++++++++++ CATEGORIA ++++++++++++++++++++
 
@@ -289,5 +292,39 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { lista = oLista }, JsonRequestBehavior.AllowGet);
         }
         #endregion;
+
+        //++++++++++++++++ Deposito ++++++++++++++++++++
+        #region Deposito
+        //[HttpGet]
+
+        //public JsonResult VistaDeposito()
+        //{
+        //    Deposito objeto = new CN_Deposito().VerDeposito();
+        //    return Json(new { resultado = objeto}, JsonRequestBehavior.AllowGet);
+        //}
+
+        [HttpGet]
+        public JsonResult ListarDeposito()
+        {
+
+
+            List<ReporteDeposito> oLista = new List<ReporteDeposito>();
+
+            oLista = new CN_Deposito().Listar();
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        #endregion
+        public JsonResult ListarMarca2()
+        {
+            List<ReporteDeposito> oLista = new List<ReporteDeposito>();
+
+            oLista = new CN_Deposito().Listar();
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

@@ -531,6 +531,9 @@
     <Content Include="Views\Acceso\Reestablecer.cshtml" />
     <Content Include="Views\Home\Clientes.cshtml" />
     <Content Include="Views\Home\Proveedores.cshtml" />
+    <Content Include="Views\Mantenedor\Deposito-no.cshtml" />
+    <Content Include="Views\Mantenedor\Deposito.cshtml" />
+    <Content Include="Views\Mantenedor\Deposito - Copia.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
