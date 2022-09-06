@@ -28,5 +28,6 @@ namespace CapaEntidad
         public string Extension { get; set; }
         public string FechaVencimiento { get; set; }
         public string FechaRegistro { get; set; }
+
     }
 }

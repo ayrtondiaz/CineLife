@@ -24,6 +24,10 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();
         }
+        public ActionResult Categoria2()
+        {
+            return View();
+        }
         public ActionResult Marca()
         {
             return View();
@@ -33,6 +37,10 @@ namespace CapaPresentacionAdmin.Controllers
             return View();
         }
         public ActionResult Deposito()
+        {
+            return View();
+        }
+        public ActionResult Articulos()
         {
             return View();
         }
@@ -316,7 +324,6 @@ namespace CapaPresentacionAdmin.Controllers
 
         }
 
-        #endregion
         public JsonResult ListarMarca2()
         {
             List<ReporteDeposito> oLista = new List<ReporteDeposito>();
@@ -324,6 +331,55 @@ namespace CapaPresentacionAdmin.Controllers
             oLista = new CN_Deposito().Listar();
 
             return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public JsonResult GuardarDeposito(Deposito objeto)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+
+            if (objeto.IdDeposito == 0)
+            {
+                resultado = new CN_Deposito().Registrar(objeto, out mensaje);
+            }
+            else
+            {
+                resultado = new CN_Deposito().Editar(objeto, out mensaje);
+            }
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult EliminarDeposito(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new CN_Deposito().Eliminar(id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+
+        //++++++++++++++++ ARTICULOS ++++++++++++++++++++
+
+        [HttpGet]
+        public JsonResult ListarArticulo()
+        {
+            List<ArtXDeposito> oLista = new List<ArtXDeposito>();
+            oLista = new CN_Articulos().Listar();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult ListarCategorias2()
+        {
+
+            List<ArtXDeposito> oLista = new List<ArtXDeposito>();
+            oLista = new CN_Articulos().Listar();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+
         }
 
     }

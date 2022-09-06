@@ -23,7 +23,7 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
 
-                    string query = "select s.IdSede ,d.IdDeposito,d.NombreArea, s.Nombre, s.Direccion,s.Telefono,l.Descripcion, p.DescripcionProv  from Sede s join Deposito d on s.IdSede = d.IdSede join Localidad l on s.IdLocalidad = l.IdLocalidad join Provincia p on l.IdProvincia = p.IdProvincia";
+                    string query = "select s.IdSede ,d.IdDeposito,d.NombreArea, s.Nombre, s.Direccion,s.Telefono,l.Descripcion, p.DescripcionProv, d.Activo  from Sede s join Deposito d on s.IdSede = d.IdSede join Localidad l on s.IdLocalidad = l.IdLocalidad join Provincia p on l.IdProvincia = p.IdProvincia";
                     SqlCommand cmd = new SqlCommand(query, oconexion);
                     cmd.CommandType = CommandType.Text;
 
@@ -46,7 +46,7 @@ namespace CapaDatos
                                     Telefono = dr["Telefono"].ToString(),
                                     Descripcion = dr["Descripcion"].ToString(),
                                     DescripcionProvincia = dr["DescripcionProv"].ToString(),
-
+                                    Activo = Convert.ToBoolean(dr["Activo"])
 
                                 }) ;
                         }
@@ -66,63 +66,97 @@ namespace CapaDatos
 
         }
 
-        //public class CD_Usuarios
-        //{
 
-        //    public List<Usuario> Listar()
-        //    {
+        public int Registrar(Deposito obj, out string Mensaje)
+        {
+            int idautogenerado = 0;
 
-        //        List<Usuario> lista = new List<Usuario>();
+            Mensaje = string.Empty;
+            try
+            {
 
-        //        try
-        //        {
-        //            using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
-        //            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_RegistrarDeposito", oconexion);
+                    cmd.Parameters.AddWithValue("Nombre", obj.Descripcion);
+                    cmd.Parameters.AddWithValue("Sede", obj.Sede);
+                    cmd.Parameters.AddWithValue("Activo", obj.Activo);
+                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-        //                string query = "select s.IdSede ,d.IdDeposito, s.Nombre, s.Direccion,s.Telefono,l.Descripcion  from Sede s join Deposito d on s.IdSede = d.IdSede join Localidad l on s.IdLocalidad = l.IdLocalidad";
+                    oconexion.Open();
 
-        //                SqlCommand cmd = new SqlCommand(query, oconexion);
-        //                cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
 
-        //                oconexion.Open();
-
-        //                using (SqlDataReader dr = cmd.ExecuteReader())
-        //                {
-        //                    while (dr.Read())
-        //                    {
-
-        //                        lista.Add(
-        //                            new Usuario()
-        //                            {
-        //                                IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
-        //                                Nombres = dr["Nombres"].ToString(),
-        //                                Apellidos = dr["Apellidos"].ToString(),
-        //                                DNI = Convert.ToInt32(dr["DNI"]),
-        //                                Telefono = dr["Telefono"].ToString(),
-        //                                Correo = dr["Correo"].ToString(),
-        //                                Clave = dr["Clave"].ToString(),
-        //                                Reestablecer = Convert.ToBoolean(dr["Reestablecer"]),
-        //                                Activo = Convert.ToBoolean(dr["Activo"])
-        //                            }
-
-        //                            );
-        //                    }
-        //                }
-        //            }
-
-        //        }
-        //        catch
-        //        {
-        //            lista = new List<Usuario>();
-
-        //        }
+                    idautogenerado = Convert.ToInt32(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                idautogenerado = 0;
+                Mensaje = ex.Message;
+            }
+            return idautogenerado;
+        }
 
 
-        //        return lista;
+        public bool Editar(Deposito obj, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EditarDeposito", oconexion);
+                    cmd.Parameters.AddWithValue("Nombre", obj.Descripcion);
+                    cmd.Parameters.AddWithValue("Sede", obj.Sede);
+                    cmd.Parameters.AddWithValue("Activo", obj.Activo);
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oconexion.Open();
+
+                    cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("update Deposito set activo=0 where IdDeposito = @id", oconexion);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.CommandType = CommandType.Text;
+                    oconexion.Open();
+                    resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return resultado;
+        }
 
 
-        //    }
-
-        //}
     }
 }
