@@ -11,10 +11,6 @@ namespace CapaNegocio
     public class CN_Deposito
     {
         private CD_Deposito objCapaDato = new CD_Deposito();
-        //public Deposito VerDeposito()
-        //{
-        //    return objCapaDato.VerDeposito();
-        //}
         public List<ReporteDeposito> Listar()
         {
             return objCapaDato.Listar();

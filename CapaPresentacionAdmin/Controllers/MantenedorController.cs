@@ -365,15 +365,9 @@ namespace CapaPresentacionAdmin.Controllers
 
         //++++++++++++++++ ARTICULOS ++++++++++++++++++++
 
+        
         [HttpGet]
         public JsonResult ListarArticulo()
-        {
-            List<ArtXDeposito> oLista = new List<ArtXDeposito>();
-            oLista = new CN_Articulos().Listar();
-            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
-        }
-        [HttpGet]
-        public JsonResult ListarCategorias2()
         {
 
             List<ArtXDeposito> oLista = new List<ArtXDeposito>();
